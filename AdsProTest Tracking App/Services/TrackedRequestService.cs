@@ -11,6 +11,15 @@ namespace AdsProTest.Services
         {
             _context = dapperContext;
         }
+
+        public async Task<bool> ContainsClientId(string clientId)
+        {
+            var query = $"SELECT  count(*)  FROM Requests  Where [ClientId] = '{clientId}'";
+            using (var connection = _context.CreateConnection())
+            {
+                return (await connection.QueryAsync<int>(query)).ElementAt(0) > 0;
+            }
+        }
         public async Task<List<TrackedRequest>> GetRequests()
         {
             var query = "SELECT * FROM Requests";
@@ -20,14 +29,16 @@ namespace AdsProTest.Services
                 return requests.ToList();
             }
         }
-        public async Task<bool> ContainsClientId(string clientId)
+        public async Task<List<TrackedRequestGroupByCountry>> GetRequestsByCountry()
         {
-            var query = $"SELECT  count(*)  FROM Requests  Where [ClientId] = '{clientId}'";
+            var query = "select ClientCountry, count(*) as [Requests] from dbo.Requests group by ClientCountry";
             using (var connection = _context.CreateConnection())
             {
-                return (await connection.QueryAsync<int>(query)).ElementAt(0) > 0;
+                var requests = await connection.QueryAsync<TrackedRequestGroupByCountry>(query);
+                return requests.ToList();
             }
         }
+
         public async Task InsertRequest(TrackedRequest request)
         {
             using (var connection = _context.CreateConnection())
