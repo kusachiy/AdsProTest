@@ -23,7 +23,9 @@
       </div>
     </div>
   </nav>
-  <router-view></router-view>
+  <div class="container-xl" style="padding: 15px;">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>

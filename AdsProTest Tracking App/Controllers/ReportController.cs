@@ -20,12 +20,17 @@ namespace AdsProTest.Controllers
         [HttpGet("byrequest")]
         public async Task<List<TrackedRequest>> GetByRequest()
         {
-            return  await _requestService.GetRequests();
+            return await _requestService.GetRequests();
         }
         [HttpGet("bycountry")]
         public async Task<List<TrackedRequestGroupByCountry>> GetByCountry()
         {
             return await _requestService.GetRequestsByCountry();
+        }
+        [HttpGet("os_dictionary")]
+        public string[] Get([FromServices] ApiConfiguration apiConfiguration)
+        {
+            return apiConfiguration.PermittedOS;
         }
     }
 }
